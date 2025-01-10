@@ -28,12 +28,16 @@ interface EmployeeDetailsProps {
   referrals: Registration[];
 }
 
+type EmployeeStatus = "active" | "inactive" | "suspended";
+
 export function EmployeeManagement({
   employee,
   referrals,
 }: EmployeeDetailsProps) {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [employeeStatus, setEmployeeStatus] =
+    useState<EmployeeStatus>("active");
 
   const stats = {
     totalReferrals: referrals.length,
@@ -44,6 +48,11 @@ export function EmployeeManagement({
       (sum, r) => sum + (r.status === "completed" ? r.fee * 0.1 : 0),
       0
     ),
+  };
+
+  const handleStatusChange = (newStatus: EmployeeStatus) => {
+    setEmployeeStatus(newStatus);
+    // Add any additional logic for status change
   };
 
   const handleUpdate = async (data: EmployeeUpdateInput) => {
@@ -62,6 +71,12 @@ export function EmployeeManagement({
       });
     }
   };
+
+  const statusOptions: { label: string; value: EmployeeStatus }[] = [
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" },
+    { label: "Suspended", value: "suspended" },
+  ];
 
   return (
     <div className="space-y-6">
@@ -114,6 +129,21 @@ export function EmployeeManagement({
           <EmployeeEditForm employee={employee} onSubmit={handleUpdate} />
         </DialogContent>
       </Dialog>
+
+      <div className="flex items-center gap-4">
+        <Label>Status</Label>
+        <select
+          value={employeeStatus}
+          onChange={(e) => handleStatusChange(e.target.value as EmployeeStatus)}
+          className="rounded-md border border-input bg-background px-3 py-2"
+        >
+          {statusOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

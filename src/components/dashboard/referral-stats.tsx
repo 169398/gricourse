@@ -5,9 +5,12 @@ import { Employee } from "@/db/schema";
 
 export function ReferralStats({
   employee,
+  totalReferrals,
   totalEarnings,
+  
 }: {
   employee: Employee;
+  totalReferrals: number;
   totalEarnings: number;
 }) {
   return (
@@ -17,7 +20,7 @@ export function ReferralStats({
           <CardTitle className="text-sm font-medium">Total Referrals</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{employee.totalReferrals}</div>
+          <div className="text-2xl font-bold">{totalReferrals}</div>
         </CardContent>
       </Card>
 

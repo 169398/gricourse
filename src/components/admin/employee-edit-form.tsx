@@ -29,6 +29,7 @@ export function EmployeeEditForm({
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       role: formData.get("role") as "admin" | "employee",
+      isActive: true,
       commissionRate: Number(formData.get("commissionRate")),
     });
   };
@@ -37,7 +38,7 @@ export function EmployeeEditForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label htmlFor="name">Name</Label>
-        <Input id="name" name="name" defaultValue={employee.name} />
+        <Input id="name" name="name" defaultValue={employee.name} required />
       </div>
       <div>
         <Label htmlFor="email">Email</Label>
@@ -46,13 +47,14 @@ export function EmployeeEditForm({
           name="email"
           type="email"
           defaultValue={employee.email}
+          required
         />
       </div>
       <div>
         <Label htmlFor="role">Role</Label>
-        <Select name="role" defaultValue={employee.role}>
+        <Select name="role" defaultValue={employee.role || "employee"}>
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="Select role" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="admin">Admin</SelectItem>
@@ -66,7 +68,10 @@ export function EmployeeEditForm({
           id="commissionRate"
           name="commissionRate"
           type="number"
-          defaultValue={employee.commissionRate}
+          min="0"
+          max="100"
+          defaultValue={employee.commissionRate || 10}
+          required
         />
       </div>
       <Button type="submit">Save Changes</Button>

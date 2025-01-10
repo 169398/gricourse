@@ -16,13 +16,11 @@ export default async function DashboardPage() {
     referredById: user.id,
   });
 
-  const totalEarnings = referrals.reduce((sum, reg) => {
+  const totalEarnings = referrals?.reduce((sum, reg) => {
     return sum + (reg.status === "completed" ? reg.fee * 0.1 : 0);
   }, 0);
 
-  const pendingEarnings = referrals.reduce((sum, reg) => {
-    return sum + (reg.status === "confirmed" ? reg.fee * 0.1 : 0);
-  }, 0);
+ 
 
   return (
     <div className="container py-10">
@@ -31,14 +29,14 @@ export default async function DashboardPage() {
       <div className="space-y-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <ReferralStats
-            totalReferrals={user.totalReferrals}
-            totalEarnings={totalEarnings}
-            pendingEarnings={pendingEarnings}
+            employee={user}
+            totalReferrals={user.totalReferrals || 0}
+            totalEarnings={totalEarnings || 0}
           />
           <ReferralLinkCard referralCode={user.referralCode} />
         </div>
 
-        <PerformanceStats referrals={referrals} />
+        <PerformanceStats referrals={referrals || []} />
 
         <Tabs defaultValue="all" className="space-y-4">
           <TabsList>
@@ -49,24 +47,24 @@ export default async function DashboardPage() {
           </TabsList>
 
           <TabsContent value="all">
-            <DataTable columns={columns} data={referrals} />
+            <DataTable columns={columns} data={referrals || []} />
           </TabsContent>
           <TabsContent value="pending">
             <DataTable
               columns={columns}
-              data={referrals.filter((r) => r.status === "pending")}
+              data={referrals?.filter((r) => r.status === "pending") || []}
             />
           </TabsContent>
           <TabsContent value="confirmed">
             <DataTable
               columns={columns}
-              data={referrals.filter((r) => r.status === "confirmed")}
+              data={referrals?.filter((r) => r.status === "confirmed") || []}
             />
           </TabsContent>
           <TabsContent value="completed">
             <DataTable
               columns={columns}
-              data={referrals.filter((r) => r.status === "completed")}
+              data={referrals?.filter((r) => r.status === "completed") || []}
             />
           </TabsContent>
         </Tabs>

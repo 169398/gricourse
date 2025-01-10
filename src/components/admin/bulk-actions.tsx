@@ -153,14 +153,9 @@ export function BulkActions({
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
-            Bulk Actions
-          </Button>
+          <Button variant="outline">Bulk Actions</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={() => setShowCommissionDialog(true)}>
-            Update Commission Rate
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setShowStatusDialog(true)}>
             Update Status
           </DropdownMenuItem>
@@ -229,7 +224,10 @@ export function BulkActions({
                 <SelectItem value="suspended">Suspended</SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={handleBulkStatusUpdate} disabled={isUpdating}>
+            <Button
+              onClick={handleBulkStatusUpdate}
+              disabled={isUpdating || !selectedStatus}
+            >
               Update {selectedEmployees.length} Employees
             </Button>
           </div>

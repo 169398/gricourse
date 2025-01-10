@@ -22,16 +22,26 @@ import {
 } from "@/components/ui/select";
 import { createRegistration } from "@/lib/actions/registration";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 export function RegistrationForm({ referralCode }: { referralCode?: string }) {
   const { toast } = useToast();
+  const [participantType, setParticipantType] = useState<string>("new_learner");
+
   const form = useForm<NewRegistration>({
     resolver: zodResolver(insertRegistrationSchema),
     defaultValues: {
       referralSource: referralCode ? "referral" : undefined,
       fee: 400,
+      participantType: "new_learner",
     },
   });
+
+  const participantTypes = [
+    { label: "New Learner", value: "new_learner" },
+    { label: "Student", value: "student" },
+    { label: "Returning GRI", value: "returning_gri" },
+  ];
 
   async function onSubmit(data: NewRegistration) {
     const result = await createRegistration(data);
@@ -58,7 +68,7 @@ export function RegistrationForm({ referralCode }: { referralCode?: string }) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -87,18 +97,46 @@ export function RegistrationForm({ referralCode }: { referralCode?: string }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Participant Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select participant type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="new_learner">New Learner</SelectItem>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="returning_gri">Returning GRI</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <select
+                  {...field}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2"
+                >
+                  {participantTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <FormControl>
+                <Input type="tel" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
